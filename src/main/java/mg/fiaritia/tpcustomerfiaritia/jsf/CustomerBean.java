@@ -4,16 +4,21 @@
  */
 package mg.fiaritia.tpcustomerfiaritia.jsf;
 
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.event.AjaxBehaviorEvent;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import mg.fiaritia.tpcustomerfiaritia.entity.Customer;
 import mg.fiaritia.tpcustomerfiaritia.service.CustomerManager;
 
 /**
  * Backing bean de la page customerList.xhtml.
+ *
  * @author raham
  */
 @Named(value = "customerBean")
@@ -33,6 +38,7 @@ public class CustomerBean implements Serializable {
 
     /**
      * Retourne la liste des clients pour affichage dans une DataTable.
+     *
      * @return List
      */
     public List<Customer> getCustomers() {
@@ -41,4 +47,12 @@ public class CustomerBean implements Serializable {
         }
         return customerList;
     }
+
+    public void sortByStateAndCity() {
+        customerList = customerList.stream()
+                .sorted(Comparator.comparing(Customer::getState)
+                        .thenComparing(Customer::getCity))
+                .collect(Collectors.toList());
+    }
+
 }
